@@ -43,8 +43,7 @@ export const getMessages = async (req, res) => {
     );
 
     res.status(200).json({ success: true, messages });
-    console.log("inside get messages");
-    
+   
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -62,15 +61,11 @@ export const markMessageAsSeen = async (req, res) => {
 
 export const sendMessage = async (req, res) => {
   try {
-    console.log("indie send msg");
-    
-     
     const { text, image } = req.body;
-    
-    
+
     const receiverId = req.params.id;
-    console.log(receiverId);
-    
+   
+
     const senderId = req.user._id;
     let imageUrl = "";
     if (image) {
@@ -90,7 +85,13 @@ export const sendMessage = async (req, res) => {
       io.to(receiverSocketId).emit("newMessage", newMessage);
     }
 
-    res.status(200).json({ success: true, message: "Message sent successfully", newMessage });
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Message sent successfully",
+        newMessage,
+      });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
