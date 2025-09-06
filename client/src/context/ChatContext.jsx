@@ -61,7 +61,7 @@ export const ChatContextProvider = ({ children }) => {
         setMessages((prev) => [...prev, newMessage]);
         api(`/api/messages/mark/${newMessage._id}`, { method: "PUT" });
       } else {
-        setUnseenMessages((prev = {}) => ({
+        setUnseenMessages((prev) => ({
           ...prev,
           [newMessage.senderId]: (prev[newMessage.senderId] || 0) + 1,
         }));
