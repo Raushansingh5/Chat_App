@@ -22,7 +22,7 @@ const App = () => {
 
 
   return (
-    <div className="bg-[url('/bgImage.svg')] bg-contain">
+    <div className="min-h-screen w-full bg-[#0e0e0e] bg-[url('/bgImage.svg')] bg-cover bg-center">
       <Toaster/>
       <Routes>
         <Route path='/' element={<ProtectedRoute><Home/></ProtectedRoute>} /> 
