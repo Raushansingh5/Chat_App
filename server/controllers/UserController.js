@@ -13,8 +13,7 @@ export const signup = async (req, res) => {
     if (user) {
       return res.status(400).json({ message: "User already exists" });
     }
-    
-    
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     const newUser = new User({
@@ -23,28 +22,24 @@ export const signup = async (req, res) => {
       password: hashedPassword,
       bio,
     });
-    
-    const token = generateToken(newUser._id);
-     
-    res.cookie("chatAppToken", token, {
-  httpOnly: true,
-  maxAge: 30 * 24 * 60 * 60 * 1000, 
-  secure: process.env.NODE_ENV === "production",
-  sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
-});
 
-    
+    const token = generateToken(newUser._id);
+
+    res.cookie("chatAppToken", token, {
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    });
+
     await newUser.save();
-   
-    res
-      .status(201)
-      .json({
-        success: true,
-        message: "User created successfully",
-        userData: newUser,
-      });
+
+    res.status(201).json({
+      success: true,
+      message: "User created successfully",
+      userData: newUser,
+    });
   } catch (e) {
-    
     res.status(500).json({ success: false, message: e.message });
   }
 };
@@ -66,12 +61,11 @@ export const login = async (req, res) => {
     }
     const token = generateToken(user._id);
     res.cookie("chatAppToken", token, {
-  httpOnly: true,
-  maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-  secure: process.env.NODE_ENV === "production",
-  sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
-});
-
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    });
 
     res
       .status(200)
@@ -83,12 +77,10 @@ export const login = async (req, res) => {
 
 export const checkAuth = async (req, res) => {
   try {
-    res
-      .status(200)
-      .json({
-        success: true,
-        userData: req.user,
-      });
+    res.status(200).json({
+      success: true,
+      userData: req.user,
+    });
   } catch (e) {
     res.status(500).json({ success: false, message: e.message });
   }
@@ -98,8 +90,8 @@ export const logout = async (req, res) => {
   try {
     res.clearCookie("chatAppToken", {
       httpOnly: true,
-     secure: process.env.NODE_ENV === "production",
-  sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
     });
 
     res.status(200).json({ success: true, message: "Logout successful" });
@@ -126,8 +118,8 @@ export const updateProfile = async (req, res) => {
       if (!bio || !fullName) {
         return res.status(400).json({ message: "All fields are required" });
       }
-      console.log(profilePic);
-      
+      // console.log(profilePic);
+
       const upload = await cloudinary.uploader.upload(profilePic);
       updatedUser = await User.findByIdAndUpdate(
         userId,
@@ -135,13 +127,11 @@ export const updateProfile = async (req, res) => {
         { new: true }
       ).select("-password");
     }
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Profile updated successfully",
-        userData: updatedUser,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      userData: updatedUser,
+    });
   } catch (e) {
     res.status(500).json({ success: true, message: e.message });
   }

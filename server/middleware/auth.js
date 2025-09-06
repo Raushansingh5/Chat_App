@@ -16,7 +16,7 @@ export const authMiddleware = async (req, res, next) => {
     }
 
     req.user = user;
-    console.log(req.method, req.originalUrl);
+    // console.log(req.method, req.originalUrl);
 
     
       
